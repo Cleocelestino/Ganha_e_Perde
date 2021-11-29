@@ -31,15 +31,25 @@ while True:
             pygame.quit()
             exit()
         
-        if event.type == KEYDOWN:
-            if event.key == K_LEFT:
-                x = x - 20
-            if event.key == K_RIGHT:
-                x = x + 20
-            if event.key == K_UP:
-                y = y - 20
-            if event.key == K_DOWN:
-                y = y + 20
+    teclapressionada = pygame.key.get_pressed()
+
+    if teclapressionada[K_LEFT]:
+        x = x - 20
+
+    if teclapressionada[K_RIGHT]:
+        x = x + 20
+
+    if teclapressionada[K_UP]:
+        y = y - 20
+
+    if teclapressionada[K_DOWN]:
+        y = y + 20
+
+        
+
+    
+
+        
                 
     pygame.draw.rect(tela, COR_AZUL, (x,y,40,50))
     pygame.draw.rect(tela, COR_VERMELHA, (0,y_graniso,10,10))
