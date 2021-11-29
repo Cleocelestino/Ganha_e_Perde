@@ -13,8 +13,8 @@ COR_AZUL = (0,0,120)
 COR_ROSA = (255,0,255)
 COR_VERMELHA = (255, 0, 0)
 
-x = 0
-y = 0
+x = LARGURA/2
+y = ALTURA/2
 y_graniso = 0
 
 tela = pygame.display.set_mode(TELA)
@@ -30,7 +30,17 @@ while True:
         if event.type == QUIT:
             pygame.quit()
             exit()
-
+        
+        if event.type == KEYDOWN:
+            if event.key == K_LEFT:
+                x = x - 20
+            if event.key == K_RIGHT:
+                x = x + 20
+            if event.key == K_UP:
+                y = y - 20
+            if event.key == K_DOWN:
+                y = y + 20
+                
     pygame.draw.rect(tela, COR_AZUL, (x,y,40,50))
     pygame.draw.rect(tela, COR_VERMELHA, (0,y_graniso,10,10))
     pygame.draw.circle(tela, COR_ROSA, (100, 130), 10)
@@ -38,7 +48,6 @@ while True:
     if y_graniso >= ALTURA:
         y_graniso = 0 
     y_graniso = y_graniso + 5
-    
     
     pygame.display.update()
       
