@@ -19,6 +19,7 @@ MOVIMENTO = 20
 OPACIDADE = 50
 
 
+
 def qualquerLargura():
     return randint(0, LARGURA)
 
@@ -38,7 +39,14 @@ pontos = 0
 maior_pontuacao = 0
 demo = True
 
+
 pygame.init()
+
+pygame.mixer.music.set_volume(0.1)
+musica_de_fundo = pygame.mixer.music.load('microchip.mp3')
+pygame.mixer.music.play(-1)
+
+barulho_colisao = pygame.mixer.Sound('smw_coin.wav')
 
 pygame.display.set_caption(NOME_JOGO)
 
@@ -94,6 +102,7 @@ while True:
                 y_moeda = qualquerAltura()
                 pontos += 1
                 aumenta_velocidade = True
+                barulho_colisao.play()
 
                 if pontos > maior_pontuacao:
                     maior_pontuacao = pontos
