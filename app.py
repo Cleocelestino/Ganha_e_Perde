@@ -3,7 +3,6 @@ from pygame.locals import *
 from sys import exit
 from random import randint
 
-
 NOME_JOGO = "Pega e Ganha"
 LARGURA = 640
 ALTURA = 480
@@ -19,8 +18,10 @@ JOGADOR_ALTURA = 50
 MOVIMENTO = 20
 OPACIDADE = 50
 
+
 def qualquerLargura():
     return randint(0, LARGURA)
+
 
 def qualquerAltura():
     return randint(0, ALTURA)
@@ -35,14 +36,21 @@ velocidade_granizo = 1
 aumenta_velocidade = False
 pontos = 0
 maior_pontuacao = 0
+demo = True
 
 pygame.init()
-fonte = pygame.font.SysFont('arial', 30, True, True)
 
-tela = pygame.display.set_mode(TELA)
 pygame.display.set_caption(NOME_JOGO)
 
+tela = pygame.display.set_mode(TELA)
+
 relogio = pygame.time.Clock()
+
+def escreva(mensagem: str, posicao=(0, 0), tamanho_font: int = 30, opacidade=1000):
+    fonte = pygame.font.SysFont('arial', tamanho_font, True, True)
+    texto_formatado = fonte.render(mensagem, True, COR_BRANCA)
+    texto_formatado.set_alpha(opacidade)
+    tela.blit(texto_formatado, posicao)
 
 while True:
     relogio.tick(FPS)
@@ -68,53 +76,44 @@ while True:
         if teclapressionada[K_DOWN] and y_jogador < ALTURA - JOGADOR_ALTURA:
             y_jogador += MOVIMENTO
 
-        jogador = pygame.draw.rect(tela, COR_AZUL, (x_jogador, y_jogador, JOGADOR_LARGURA, JOGADOR_ALTURA))
-        granizo = pygame.draw.rect(tela, COR_VERMELHA, (x_granizo, y_granizo, JOGADOR_LARGURA/2, JOGADOR_ALTURA/2))
-        moeda = pygame.draw.circle(tela, COR_ROSA, (x_moeda, y_moeda), 10)
+        if demo:
+            escreva('Use os direcionais, pegue a moeda rosa.', (30, 100), 20)
+            escreva('E não seja atingido pelo quadrado vermelho!', (20, 200), 20)
+            escreva("Pressione a tecla espaço para começar", (20, 300), 20)
 
-        if jogador.colliderect(moeda):
-            x_moeda = qualquerLargura()
-            y_moeda = qualquerAltura()
-            pontos += 1
-            aumenta_velocidade = True
+            if teclapressionada[K_SPACE]:
+                demo = False
+        else:
 
-            if pontos > maior_pontuacao:
-                maior_pontuacao = pontos
+            jogador = pygame.draw.rect(tela, COR_AZUL, (x_jogador, y_jogador, JOGADOR_LARGURA, JOGADOR_ALTURA))
+            granizo = pygame.draw.rect(tela, COR_VERMELHA, (x_granizo, y_granizo, JOGADOR_LARGURA/2, JOGADOR_ALTURA/2))
+            moeda = pygame.draw.circle(tela, COR_ROSA, (x_moeda, y_moeda), 10)
 
-        if jogador.colliderect(granizo):
-            pontos -= 1
-            y_granizo = 0
-            x_granizo = qualquerLargura()
+            if jogador.colliderect(moeda):
+                x_moeda = qualquerLargura()
+                y_moeda = qualquerAltura()
+                pontos += 1
+                aumenta_velocidade = True
 
-        if y_granizo >= ALTURA:
-            y_granizo = 0
-            x_granizo = qualquerLargura()
+                if pontos > maior_pontuacao:
+                    maior_pontuacao = pontos
 
-        if pontos % 5 == 0 and pontos >= maior_pontuacao - 1 and aumenta_velocidade:
-            velocidade_granizo += 1
-            aumenta_velocidade = False
+            if jogador.colliderect(granizo) or y_granizo >= ALTURA:
+                pontos -= 1
+                y_granizo = 0
+                x_granizo = qualquerLargura()
 
-        y_granizo += velocidade_granizo
+            if pontos % 5 == 0 and pontos >= (maior_pontuacao - 1) and aumenta_velocidade:
+                velocidade_granizo += 1
+                aumenta_velocidade = False
 
-        mensagem = f'Pontos: {pontos}, Maior Pontuação: {maior_pontuacao}'
-        texto_formatado = fonte.render(mensagem, True, COR_BRANCA)
-        texto_formatado.set_alpha(OPACIDADE)
+            y_granizo += velocidade_granizo
 
-        tela.blit(texto_formatado, (100, 40))
-
-        mensagem = f'Velocidade: {velocidade_granizo}'
-        texto_formatado = fonte.render(mensagem, True, COR_BRANCA)
-        texto_formatado.set_alpha(OPACIDADE)
-
-        tela.blit(texto_formatado, (100, 400))      
+            escreva(f'Pontos: {pontos}, Maior Pontuação: {maior_pontuacao}',(100, 40), opacidade = OPACIDADE)
+            escreva(f'Velocidade: {velocidade_granizo}', (100, 400), opacidade = OPACIDADE) 
 
     else:
-        mensagem = f'Maior Pontuação: {maior_pontuacao}'
-        texto_formatado = fonte.render(mensagem, True, COR_BRANCA)
-        tela.blit(texto_formatado, (100, 400))
-
-        mensagem = 'FIM!'
-        texto_formatado = fonte.render(mensagem, True, COR_BRANCA)
-        tela.blit(texto_formatado, (100, 200))
+        escreva(f'Maior Pontuação: {maior_pontuacao}',(100, 200))
+        escreva('FIM!',(100, 400))
 
     pygame.display.update()
