@@ -18,8 +18,6 @@ JOGADOR_ALTURA = 50
 MOVIMENTO = 20
 OPACIDADE = 50
 
-
-
 def qualquerLargura():
     return randint(0, LARGURA)
 
@@ -39,12 +37,11 @@ pontos = 0
 maior_pontuacao = 0
 demo = True
 
-
 pygame.init()
 
 pygame.mixer.music.set_volume(0.1)
 musica_de_fundo = pygame.mixer.music.load('microchip.mp3')
-pygame.mixer.music.play(-1)
+# pygame.mixer.music.play(-1)
 
 barulho_colisao = pygame.mixer.Sound('smw_coin.wav')
 
@@ -107,11 +104,15 @@ while True:
                 if pontos > maior_pontuacao:
                     maior_pontuacao = pontos
 
-            if jogador.colliderect(granizo) or y_granizo >= ALTURA:
+            if jogador.colliderect(granizo):
                 pontos -= 1
                 y_granizo = 0
                 x_granizo = qualquerLargura()
-
+            
+            if  y_granizo >= ALTURA:
+                y_granizo = 0
+                x_granizo = qualquerLargura()           
+            
             if pontos % 5 == 0 and pontos >= (maior_pontuacao - 1) and aumenta_velocidade:
                 velocidade_granizo += 1
                 aumenta_velocidade = False
