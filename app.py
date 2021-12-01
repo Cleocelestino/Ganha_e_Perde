@@ -3,7 +3,7 @@ from pygame.locals import *
 from sys import exit
 from random import randint
 
-NOME_JOGO = "Pega e Ganha"
+NOME_JOGO = "Ganha e Perde"
 LARGURA = 640
 ALTURA = 480
 TELA = (LARGURA, ALTURA)
@@ -41,7 +41,7 @@ pygame.init()
 
 pygame.mixer.music.set_volume(0.1)
 musica_de_fundo = pygame.mixer.music.load('microchip.mp3')
-# pygame.mixer.music.play(-1)
+pygame.mixer.music.play(-1)
 
 barulho_colisao = pygame.mixer.Sound('smw_coin.wav')
 
